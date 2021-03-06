@@ -11,6 +11,24 @@ void Addition3(int const &A, int const &B, int* __restrict C){
 void Addition4(const int *&A,const int *&B, int* __restrict C){
     *C=*A+*B;
 }
+void AddArrays1(const int A[10], const int B[10],int* C){ 
+    int i=0;
+    while(i<10){
+        *C=A[i]+B[i];
+        i++;
+        C++;
+    }
+}
+void AddArrays2(const int* A,const int *B, int* __restrict C){
+    int i=0;
+    while(i<10){
+        *C=*A+*B;
+        A++;
+        B++;
+        C++;
+        i++;
+    }
+}
 int main(int argc, char *argv[])
 {
     //a.i
@@ -44,5 +62,20 @@ int main(int argc, char *argv[])
     int* __restrict p_4=&c_4;
     Addition4(pointer_r_a,pointer_r_b,p_4);
     std::cout<<c_4<<std::endl;
+    //b.i
+    const int a1[10]={1,2,3,4,5,6,7,8,9,10},b1[10]={2,4,6,8,10,12,14,16,18,20};
+    int c1[10]={0};
+    int* __restrict p1=c1;
+    AddArrays1(a1,b1,p1);
+    for(int i=0;i<10;i++) std::cout<<c1[i]<<" ";
+    std::cout<<std::endl;
+    //b.ii
+    const int a2[10]={10,9,8,7,6,5,4,3,2,1},b2[10]={20,18,16,14,12,10,8,6,4,2};
+    int c2[10]={0};
+    const int*pa2=a2,*pb2=b2;
+    int* __restrict p2=c2;
+    AddArrays2(pa2,pb2,p2);
+    for(int i=0;i<10;i++) std::cout<<c2[i]<<" ";
+    std::cout<<std::endl;
     return 0;
 }
