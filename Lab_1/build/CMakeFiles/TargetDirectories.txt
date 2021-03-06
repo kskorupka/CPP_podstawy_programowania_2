@@ -1,0 +1,6 @@
+/home/student/podstawy_programowania_2/Lab_1/build/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/Lab_1/build/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/Lab_1/build/src/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/Lab_1/build/src/CMakeFiles/run_template.dir
+/home/student/podstawy_programowania_2/Lab_1/build/src/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/Lab_1/build/src/CMakeFiles/template.dir
