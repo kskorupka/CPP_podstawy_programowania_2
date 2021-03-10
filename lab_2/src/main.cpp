@@ -14,6 +14,7 @@ class Circle{
     }
     Circle(){
         std::cout<<"***NEW CIRCLE CREATED***"<<std::endl;
+        count++;
     }
     Circle(const Circle &circle){
         r=circle.r;
@@ -34,6 +35,7 @@ class Square{
     }
     Square(){
         std::cout<<"***NEW SQUARE CREATED***"<<std::endl;
+        count++;
     }
     Square(const Square &square){
         a=square.a;
