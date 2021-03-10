@@ -55,5 +55,8 @@ int main(int argc, char *argv[]){
     Circle o2=o1;
     Square k2=k1;
     std::cout<<std::endl<<std::endl;
+    Circle *pc=new Circle;
+    Circle o3=*pc;
+    std::cout<<std::endl<<std::endl;
     return 0;
 }
