@@ -15,6 +15,13 @@ class Circle{
     Circle(){
         std::cout<<"***NEW CIRCLE CREATED***"<<std::endl;
     }
+    Circle(const Circle &circle){
+        r=circle.r;
+        std::cout<<"***CIRCLE'S COPY CREATED***"<<std::endl;
+    }
+    ~Circle(){
+        std::cout<<"***CIRCLE DESTROYED***"<<std::endl;
+    }
 };
 class Square{
     public:
@@ -28,6 +35,13 @@ class Square{
     Square(){
         std::cout<<"***NEW SQUARE CREATED***"<<std::endl;
     }
+    Square(const Square &square){
+        a=square.a;
+        std::cout<<"***SQUARE'S COPY CREATED***"<<std::endl;
+    }
+    ~Square(){
+        std::cout<<"***SQUARE DESTROYED***"<<std::endl;
+    }
 };
 int main(int argc, char *argv[]){
     Circle o1;
@@ -38,5 +52,8 @@ int main(int argc, char *argv[]){
     k1.a=5.0;
     std::cout<<"Perimeter of square for a="<<k1.a<<" is: "<<k1.Perimeter()<<std::endl;
     std::cout<<"Field of square for a="<<k1.a<<" is: "<<k1.Field()<<std::endl<<std::endl;
+    Circle o2=o1;
+    Square k2=k1;
+    std::cout<<std::endl<<std::endl;
     return 0;
 }
