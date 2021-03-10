@@ -3,6 +3,7 @@
 class Circle{
     public:
     double r;
+    //static int count_circles;
     static double PI(){
         return M_PI;
     }
@@ -14,7 +15,7 @@ class Circle{
     }
     Circle(){
         std::cout<<"***NEW CIRCLE CREATED***"<<std::endl;
-        count++;
+        //count_circles++;
     }
     Circle(const Circle &circle){
         r=circle.r;
@@ -27,6 +28,7 @@ class Circle{
 class Square{
     public:
     double a;
+    //static int count_squares;
     double Perimeter(){
         return 4*a;
     }
@@ -35,7 +37,7 @@ class Square{
     }
     Square(){
         std::cout<<"***NEW SQUARE CREATED***"<<std::endl;
-        count++;
+        //count_squares++;
     }
     Square(const Square &square){
         a=square.a;
