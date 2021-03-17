@@ -42,7 +42,12 @@ public:
 class Drawing {
 private:
   // Kwadrat i Kolo
+    Square* s1 = new Square(5);
+    Circle* c1 = new Circle(5);
   // Rozmiar plotna
+  const int width=20;
+  const int height=20;
+
 
 public:
   // Konstruktory
@@ -50,4 +55,7 @@ public:
   // Pobierz Informacje
 };
 
-int main(int argc, char *argv[]) { return 0; }
+int main(int argc, char *argv[]) { 
+    std::cout<<"Hello world"<<std::endl;
+    return 0;
+ }
