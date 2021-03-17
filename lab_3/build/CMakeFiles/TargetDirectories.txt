@@ -1,0 +1,6 @@
+/home/student/podstawy_programowania_2/lab_3/build/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_3/build/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_3/build/src/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_3/build/src/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_3/build/src/CMakeFiles/run_lab_3.dir
+/home/student/podstawy_programowania_2/lab_3/build/src/CMakeFiles/lab_3.dir
