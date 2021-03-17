@@ -76,8 +76,6 @@ public:
       delete c1;
       //std::cout<<"Object Circle destroyed"<<std::endl;
   }
-  //delete s1; error???
-
   // Pobierz Informacje
   void getInfo(){
       std::cout<<"***INFORMATION ABOUT DRAWING***"<<std::endl;
