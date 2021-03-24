@@ -13,7 +13,7 @@ public:
     Figure(){
         //std::cout<<std::endl<<"***OBJECT FIGURE CREATED***"<<std::endl<<std::endl;
     }
-    Figure (const Figure &figure){
+    Figure (Figure &figure){
         x=figure.x;
         y=figure.y;
     }
@@ -35,6 +35,12 @@ public:
         setType(type);
         //std::cout<<std::endl<<"***OBJECT SQUARE CREATED***"<<std::endl<<std::endl;
     }
+    Square(Square &square){
+        setX(square.getX());
+        setY(square.getY());
+        side=square.side;
+        setType(square.getType());
+    }
     ~Square(){
         //std::cout<<std::endl<<"***OBJECT SQUARE DESTROYED***"<<std::endl<<std::endl;
     }
@@ -51,6 +57,12 @@ public:
         radius=_radius;
         setType(type);
         //std::cout<<std::endl<<"***OBJECT CIRCLE CREATED***"<<std::endl<<std::endl;
+    }
+    Circle(Circle &circle){
+        setX(circle.getX());
+        setY(circle.getY());
+        radius=circle.radius;
+        setType(circle.getType());
     }
     ~Circle(){
         //std::cout<<std::endl<<"***OBJECT CIRCLE DESTROYED***"<<std::endl<<std::endl;
@@ -85,23 +97,15 @@ int main(int argc, char *argv[]){
     Drawing d1(20,30);
     Figure *ptr;
     Square *s=new Square(5,6,7);
-    ptr=s;
-    d1.addFigure(ptr);
+    ptr=s; d1.addFigure(ptr);
     Circle *c=new Circle(1,1,3);
-    ptr=c;
-    d1.addFigure(ptr);
-    /*Square s1(1,2,5);
-    Square s2(3,4,7);
-    Circle c1(1,1,3);
-    Figure *ptr=&s1;
-    d1.getPointer(ptr);
-    d1.addFigure();
-    ptr=&s2;
-    d1.getPointer(ptr);
-    d1.addFigure();
-    ptr=&c1;
-    d1.getPointer(ptr);
-    d1.addFigure();*/
+    ptr=c; d1.addFigure(ptr);
+    Square s1=*s;
+    ptr=&s1; d1.addFigure(ptr);
+    Circle c1=*c;
+    ptr=&c1; d1.addFigure(ptr);
+    c=new Circle(10,20,3);
+    ptr=c; d1.addFigure(ptr);
     std::cout<<"Drawing "<<d1.getSizeA()<<"x"<<d1.getSizeB()<<std::endl;
     for(Figure* i:d1.figures){
         std::cout<<"figure: "<<i->getType()<<", "<<"positon: ("<<i->getX()<<","<<i->getY()<<"), field: "<<i->field()<<std::endl;
