@@ -1,6 +1,6 @@
-add_executable (template main.cpp)
+add_executable (lab_4 main.cpp)
 
-add_custom_target(run_template DEPENDS template
+add_custom_target(run_lab_4 DEPENDS lab_4
     COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/template
+        ${CMAKE_CURRENT_BINARY_DIR}/lab_4
 )
