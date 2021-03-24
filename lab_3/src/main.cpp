@@ -98,6 +98,8 @@ int main(int argc, char *argv[]) {
     std::cout<<std::endl;
     drawing2.getInfo();
     std::cout<<std::endl;
+    //std::cout<<"drawing1 addres: "<<drawing1<<std::endl;
+    //std::cout<<"drawing2 addres: "<<&drawing2<<std::endl;
     delete drawing1;
     std::cout<<std::endl;
     return 0;
