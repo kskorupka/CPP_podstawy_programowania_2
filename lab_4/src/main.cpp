@@ -110,14 +110,15 @@ int main(int argc, char *argv[]){
     for(Figure* i:d1.figures){
         std::cout<<"figure: "<<i->getType()<<", "<<"positon: ("<<i->getX()<<","<<i->getY()<<"), field: "<<i->field()<<std::endl;
     }
-    //Blad podczas uzywania free
+    std::cout<<std::endl;
+    //Blad podczas uzywania delete
     
     /*for(Figure* i:d1.figures){
-        if(i->getType()=="circle") free(i);
-    }
+        if(i->getType()=="circle") delete i;
+    }*/
     std::cout<<std::endl<<"After destroying circles"<<std::endl;
     for(Figure* i:d1.figures){
         std::cout<<"figure: "<<i->getType()<<", "<<"positon: ("<<i->getX()<<","<<i->getY()<<"), field: "<<i->field()<<std::endl;
-    }*/
+    }
     return 0;
 }
