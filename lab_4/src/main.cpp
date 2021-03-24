@@ -60,17 +60,37 @@ public:
     }
 };
 class Drawing{
+    double sizeA,sizeB;
     Figure *ptr;
 public:
     std::list<Figure*> figures;
-    void getPointer(Figure* w){ptr=w;}
-    void addFigure(){
+    void addFigure(Figure* ptr){
         figures.push_back(ptr);
+    }
+    void setSize(double _a,double _b){
+        sizeA=_a;
+        sizeB=_b;
+    }
+    double getSizeA(){return sizeA;}
+    double getSizeB(){return sizeB;}
+    Drawing(double _a,double _b){
+        setSize(_a,_b);
+        //std::cout<<std::endl<<"***OBJECT DRAWING CREATED***"<<std::endl<<std::endl;
+    }
+    ~Drawing(){
+        //std::cout<<std::endl<<"***OBJECT DRAWING DESTROYED***"<<std::endl<<std::endl;
     }
 };
 int main(int argc, char *argv[]){
-    Drawing d1;
-    Square s1(1,2,5);
+    Drawing d1(20,30);
+    Figure *ptr;
+    Square *s=new Square(5,6,7);
+    ptr=s;
+    d1.addFigure(ptr);
+    Circle *c=new Circle(1,1,3);
+    ptr=c;
+    d1.addFigure(ptr);
+    /*Square s1(1,2,5);
     Square s2(3,4,7);
     Circle c1(1,1,3);
     Figure *ptr=&s1;
@@ -81,9 +101,10 @@ int main(int argc, char *argv[]){
     d1.addFigure();
     ptr=&c1;
     d1.getPointer(ptr);
-    d1.addFigure();
+    d1.addFigure();*/
+    std::cout<<"Drawing "<<d1.getSizeA()<<"x"<<d1.getSizeB()<<std::endl;
     for(Figure* i:d1.figures){
-        std::cout<<"figure: "<<i->getType()<<" ,"<<"positon: ("<<i->getX()<<","<<i->getY()<<"), field: "<<i->field()<<std::endl;
+        std::cout<<"figure: "<<i->getType()<<", "<<"positon: ("<<i->getX()<<","<<i->getY()<<"), field: "<<i->field()<<std::endl;
     }
     return 0;
 }
