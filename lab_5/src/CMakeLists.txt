@@ -1,4 +1,4 @@
-add_executable (lab_5 main.cpp)
+add_executable (lab_5 main.cpp matrix.h matrix.cpp)
 
 add_custom_target(run_lab_5 DEPENDS lab_5
     COMMAND
