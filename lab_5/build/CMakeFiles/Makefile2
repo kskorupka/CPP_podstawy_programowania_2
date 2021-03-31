@@ -98,7 +98,7 @@ src/CMakeFiles/run_lab_5.dir/all: src/CMakeFiles/lab_5.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/run_lab_5.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/run_lab_5.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/run_lab_5.dir/rule
@@ -120,12 +120,12 @@ src/CMakeFiles/run_lab_5.dir/clean:
 src/CMakeFiles/lab_5.dir/all:
 	$(MAKE) -f src/CMakeFiles/lab_5.dir/build.make src/CMakeFiles/lab_5.dir/depend
 	$(MAKE) -f src/CMakeFiles/lab_5.dir/build.make src/CMakeFiles/lab_5.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/podstawy_programowania_2/lab_5/build/CMakeFiles --progress-num=1,2 "Built target lab_5"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/podstawy_programowania_2/lab_5/build/CMakeFiles --progress-num=1,2,3 "Built target lab_5"
 .PHONY : src/CMakeFiles/lab_5.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/lab_5.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/lab_5.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/podstawy_programowania_2/lab_5/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/lab_5.dir/rule
