@@ -1,0 +1,6 @@
+/home/student/podstawy_programowania_2/lab_5/build/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_5/build/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_5/build/src/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_5/build/src/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_5/build/src/CMakeFiles/run_lab_5.dir
+/home/student/podstawy_programowania_2/lab_5/build/src/CMakeFiles/lab_5.dir
