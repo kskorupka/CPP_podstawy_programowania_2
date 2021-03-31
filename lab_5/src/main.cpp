@@ -16,20 +16,23 @@ int main() {
 			m2.set(i, j,(i + j)+2);
 		}
 	}
-	std::cout << m1<<std::endl<<m2<<std::endl;
+	std::cout <<"m1: "<<std::endl<<m1<<std::endl<<"m2: "<<std::endl<<m2<<std::endl;
 	TwoDimensionMatrix m3;
 	m3 = m1 + m2;
-	std::cout << m3;
+	std::cout << "m1 + m2: "<<std::endl<<m3;
 	m2 *= 3;
-	std::cout << std::endl << m2;
+	std::cout<<std::endl<<"m2 *= 3: "<<std::endl<< m2;
+    std::cout<<std::endl<<"m1 == m2 ??"<<std::endl;
 	if (m1 == m2) std::cout << "true" << std::endl;
-	else std::cout << std::endl << "false" << std::endl;
+	else std::cout << "false" << std::endl;
 	TwoDimensionMatrix m4(m1);
+    std::cout<<std::endl<<"m4: "<<std::endl<<m4<<std::endl;
+    std::cout<<"m1 == m4 ??"<<std::endl;
 	if (m1 == m4) std::cout << "true" << std::endl;
-	else std::cout << std::endl << "false" << std::endl;
+	else std::cout << "false" << std::endl;
 	m4 *= 2;
-	std::cout << m4 << std::endl;
+	std::cout<<std::endl<<"m4 *= 2: "<<std::endl << m4 << std::endl;
 	TwoDimensionMatrix m5;
 	m5 = m1 && m4;
-	std::cout << m5;
+	std::cout << "m1 && m4"<<std::endl<<m5<<std::endl;
 }
