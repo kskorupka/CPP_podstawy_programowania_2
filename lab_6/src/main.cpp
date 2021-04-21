@@ -69,7 +69,7 @@ public:
     Square(double _side_, int x, int y) {
         count++;
         side = _side_;
-        std::cout << "Object Square created" << std::endl;
+        //std::cout << "Object Square created" << std::endl;
         this->setType("Square");
         this->setXY(x, y);
     }
@@ -85,10 +85,8 @@ public:
     double getArea() const override { return side * side; }
     double getSide() { return side; }
     void set(double n) { side = n; }
-
     void changePosS(int a, int b) { this->setXY(a, b); }
 };
-
 double Square::count = 0;
 class Circle : public Figure {
 private:
@@ -98,7 +96,7 @@ public:
     Circle(const Circle& cir) : Figure(cir) { this->radius = cir.radius; }
     Circle(double _radius_, int x, int y) {
         radius = _radius_;
-        std::cout << "Object Circle created" << std::endl;
+        //std::cout << "Object Circle created" << std::endl;
         this->setXY(x, y);
         this->setType("Circle");
     }
@@ -128,7 +126,7 @@ public:
     Drawing(int _rx, int _ry) {
         r_x = _rx;
         r_y = _ry;
-        cout << "Drawing has been created." << endl;
+        //cout << "Drawing has been created." << endl;
     }
     Drawing(const Drawing& f) {};
     ~Drawing() {
@@ -161,7 +159,8 @@ public:
         advance(itr, idx);
         figureList.erase(itr);
     }
-    list<Figure*>& getList() {return figureList;}
+    void setList(list<Figure*>& lista) {figureList = lista;}
+    list<Figure*>& getList(){return figureList;}
     int getX()const { return r_x; }
     int getY()const { return r_y; }
     bool operator==(Drawing& drawing) {
@@ -182,9 +181,31 @@ public:
         } while (i != this->getList().end() && j != drawing.getList().end());
         return true;
     }
+     Figure*& operator[](size_t n) {
+        list<Figure*>::iterator it = this->getList().begin();
+        advance(it, n);
+        return *it;
+    }
+     Figure*& operator()(size_t n) {
+         list<Figure*>::iterator it = this->getList().begin();
+         advance(it, n);
+         return *it;
+     }
+     Drawing operator=(Drawing& drawing) {
+         if (&drawing == this) return *this;
+         figureList = drawing.getList();
+         r_x = drawing.getX();
+         r_y = drawing.getY();
+         return *this;
+     }
+     Drawing& operator+=(Drawing& drawing) {
+         list<Figure*>::iterator start = drawing.getList().begin();
+         list<Figure*>::iterator end = this->getList().end();
+         for (Figure* i : drawing.getList()) this->getList().insert(end, i);
+         return *this;
+     }
 };
 std::ostream& operator<<(std::ostream& os, Drawing& obj) {
-    os << "Info about the drawing: " << endl;
     cout<<"Drawing's size: "<< obj.getX()<< " X " << obj.getY() << endl;
     for (Figure* i : obj.getList()) {
         cout << "type: ";
@@ -203,11 +224,18 @@ std::istream& operator>>(std::istream& is, Drawing& obj)
     obj.setSize(x, y);
     return is;
 }
-// bool PComp(const Figure *const &a, const Figure *const &b) { return *a < *b;
-// }
 bool PComp(const Figure* const& a, const Figure* const& b) {
     if (a->getArea() < b->getArea()) return true;
     return false;
+}
+Drawing operator+(Drawing& drawing1, Drawing& drawing2) {
+    Drawing* new_drawing = new Drawing();
+    *new_drawing = drawing1;
+    list<Figure*>::iterator itr = new_drawing->getList().end();
+    for (Figure* i : drawing2.getList()) new_drawing->getList().insert(itr, i);
+    drawing1 = *new_drawing;
+    delete new_drawing;
+    return drawing1;
 }
 int main(int argc, char* argv[]) {
     Drawing* drawing = new Drawing(100, 100);
@@ -243,12 +271,15 @@ int main(int argc, char* argv[]) {
     // 4 // sort the figures based on area (compare pointer by the dereference)
     // uncoment also PComp function
     // drawing->getList().sort(PComp);
+    //done
 
     // 5 // return the n'th element in the figure list
     // std::cout << (*drawing)[0] << std::endl;
+    //done
 
     // 6 // return the n'th element in the figure list
     // std::cout << (*drawing)(0);
+    //done
 
     // 7 // add figures from drawing2 to drawing
     // *drawing += *drawing2; //
@@ -260,21 +291,32 @@ int main(int argc, char* argv[]) {
     // 9 // fix the memory leak
 
     // 10 // clean the code
-    cout << endl;
-    cout << *drawing << endl;
-    //cout << *drawing2 << endl;
-    //cout << "Change dimension for drawing2 (2 int numbers): ";
-    //cin >> *drawing2;
-    //cout << *drawing2 << endl;
-    Drawing* drawing3(drawing);
-    cout << *drawing3 << endl;
+    cout << "cout<<*drawing : " << endl;
+    cout <<*drawing << endl;
+    Drawing* drawing3 = new Drawing();
+    *drawing3 = *drawing;
+    cout << "if drawing == drawing3 (drawing3 is drawing's copy): "<<endl;
     if (*drawing3 == *drawing) cout << "true" << endl;
     else cout << "false" << endl;
+    cout << "if drawing == drawing2: ";
+    if (*drawing2 == *drawing) cout << "true" << endl;
+    else cout << "false" << endl;
+    drawing->getList().sort(PComp);
+    cout <<endl<<"drawing (after sort): "<<endl<< *drawing<<endl;
+    cout <<"(*drawing)[2]: type: "<<(*drawing)[2]->getTypeString()<<", area: "<<(*drawing)[2]->getArea()<<endl;
+    cout << "(*drawing)(1): type: " << (*drawing)(1)->getTypeString() << ", area: " << (*drawing)(1)->getArea() << endl<<endl;
+    cout << "drawing+=drawing2: " << endl << endl;
+    *drawing += *drawing2;
+    cout << *drawing << endl;
+    cout << endl << "*drawing = *drawing2: " << endl;
+    *drawing = *drawing2;
+    cout << *drawing;
     delete drawing;
     delete c1;
     delete s1;
     delete sq1;
     delete cir2;
-
+    delete drawing2;
+    delete drawing3;
     return 0;
 }
