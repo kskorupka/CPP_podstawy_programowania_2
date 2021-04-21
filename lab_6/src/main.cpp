@@ -40,8 +40,9 @@ public:
     void setXY(int _x, int _y) { coord.setPtXY(_x, _y); }
     void setType(const char* n) { type = n; }
     void getType() { cout << type; }
+    string getTypeString() { return type; }
     void getCo() { cout << "(" << coord.x_ob << " , " << coord.y_ob << ")"; }
-    virtual double getArea() { return 0; };
+    virtual double getArea() const { return 0; };
     virtual double getCircumference() { return 0; };
     Figure(const Figure& f) {
         this->setXY(f.getX(), f.getY());
@@ -81,7 +82,7 @@ public:
         std::cout << "Object Square destroyed" << std::endl;
     }
     double getCircumference() override { return 4 * side; }
-    double getArea() override { return side * side; }
+    double getArea() const override { return side * side; }
     double getSide() { return side; }
     void set(double n) { side = n; }
 
@@ -107,8 +108,8 @@ public:
     };
     ~Circle() { std::cout << "Object Circle destroyed" << std::endl; }
     double getCircumference() override { return 2 * M_PI * radius; }
-    double getArea() override { return M_PI * radius * radius; }
-    //static void print_pi() { std::cout << "Pi is " << M_PI << std::endl; }
+    double getArea() const override { return M_PI * radius * radius; }
+    static void print_pi() { std::cout << "Pi is " << M_PI << std::endl; }
     void set(double n) { radius = n; }
     double getRadius() { return radius; }
     void changePosC(int a, int b) { this->setXY(a, b); }
@@ -158,44 +159,56 @@ public:
     void eraser(int idx) {
         list<Figure*>::iterator itr = figureList.begin();
         advance(itr, idx);
+        figureList.erase(itr);
     }
-    int getSizeX()const {return r_x; }
-    int getSizeY()const{ return r_y; }
-    list<Figure*> getList()const{
-        return this->figureList;
-    }
+    list<Figure*>& getList() {return figureList;}
+    int getX()const { return r_x; }
+    int getY()const { return r_y; }
     bool operator==(Drawing& drawing) {
-        if (this->getSizeX() != drawing.getSizeX()) return false;
-        if (this->getSizeX() != drawing.getSizeY()) return false;
+        if (this->getX() != drawing.getX() || this->getX() != drawing.getY()) return false;
+        //Are the lists the same if they have the same address or the same content??
+        //list address:
+        /*
         list<Figure*> lista1 = this->getList();
         list<Figure*> lista2 = drawing.getList();
-        if (lista1.size() != lista2.size()) return false;
-        for (int i = 0; i < lista1.size(); i++) {
-            //if (lista1[i]->getX() != lista2[i]->getX()) return false;
-        }
+        if (&lista1 != &lista2) return false;*/
+        //list content:
+        list<Figure*>::iterator i = this->getList().begin();
+        list<Figure*>::iterator j = drawing.getList().begin();
+        do {
+            if (((*i)->getTypeString() != (*j)->getTypeString()) || ((*i)->getX() != (*j)->getX()) || ((*i)->getY() != (*j)->getY()) || ((*i)->getArea() != (*j)->getArea()) || ((*i)->getCircumference() != (*j)->getCircumference())) return false;
+            i++;
+            j++;
+        } while (i != this->getList().end() && j != drawing.getList().end());
+        return true;
     }
 };
-std::ostream& operator<<(std::ostream& os, const Drawing& obj) {
-    //cout<<
-    //cout<<"Drawing's size: "<<obj->getSizeX()<<" X "<<obj->getSizeY()<<endl;
+std::ostream& operator<<(std::ostream& os, Drawing& obj) {
     os << "Info about the drawing: " << endl;
-    os << "Drawing's size: "<< obj.getSizeX() << " X " << obj.getSizeY() << endl;
+    cout<<"Drawing's size: "<< obj.getX()<< " X " << obj.getY() << endl;
     for (Figure* i : obj.getList()) {
-        //os << "Figure: " << i->getType() << 
+        cout << "type: ";
+        i->getType();
+        cout<< ", position: (" << i->getX() << ", " << i->getY() << "), field: " << i->getArea() << endl;
     }
-
     return os;
 }
 std::istream& operator>>(std::istream& is, Drawing& obj)
 {
     // read obj from stream
     if (&obj == NULL) is.setstate(std::ios::failbit);
-    //sete size
+    //set size
+    int x, y;
+    is >> x >> y;
+    obj.setSize(x, y);
     return is;
 }
 // bool PComp(const Figure *const &a, const Figure *const &b) { return *a < *b;
 // }
-
+bool PComp(const Figure* const& a, const Figure* const& b) {
+    if (a->getArea() < b->getArea()) return true;
+    return false;
+}
 int main(int argc, char* argv[]) {
     Drawing* drawing = new Drawing(100, 100);
     Drawing* drawing2 = new Drawing(200, 200);
@@ -215,13 +228,17 @@ int main(int argc, char* argv[]) {
 
     // 1 // print all available info
     // std::cout << *drawing << std::endl;
+    //done
+
     // 2 // change the drawing dimensions
     // std::cin >> *drawing;
+    //done
 
     // 3 // comparison
     // if (*drawing == *drawing2) {
     //  std::cout << "Drawing are equal" << std::endl;
     // }
+    //done
 
     // 4 // sort the figures based on area (compare pointer by the dereference)
     // uncoment also PComp function
@@ -243,7 +260,16 @@ int main(int argc, char* argv[]) {
     // 9 // fix the memory leak
 
     // 10 // clean the code
-
+    cout << endl;
+    cout << *drawing << endl;
+    //cout << *drawing2 << endl;
+    //cout << "Change dimension for drawing2 (2 int numbers): ";
+    //cin >> *drawing2;
+    //cout << *drawing2 << endl;
+    Drawing* drawing3(drawing);
+    cout << *drawing3 << endl;
+    if (*drawing3 == *drawing) cout << "true" << endl;
+    else cout << "false" << endl;
     delete drawing;
     delete c1;
     delete s1;
