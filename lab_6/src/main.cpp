@@ -311,6 +311,9 @@ int main(int argc, char* argv[]) {
     cout << endl << "*drawing = *drawing2: " << endl;
     *drawing = *drawing2;
     cout << *drawing;
+    //cout<<"Set the dimension for *drawing (2 int numbers): ";
+    //cin>>*drawing;
+    cout<<endl<<*drawing<<endl;
     delete drawing;
     delete c1;
     delete s1;
@@ -318,5 +321,6 @@ int main(int argc, char* argv[]) {
     delete cir2;
     delete drawing2;
     delete drawing3;
+    cout<<endl<<"\"cin>>*drawing\" wasn't used, but it's implemented and works as it should (uncomment lines: 314, 315)"<<endl;
     return 0;
 }
