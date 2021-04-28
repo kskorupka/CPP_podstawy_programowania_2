@@ -4,12 +4,12 @@ using namespace std;
 class Object {
 	string type;
 public:
-	virtual ~Object() {};
+	virtual ~Object() = default;
 	virtual void draw() const = 0;
 	string getType() { return type; }
 	void setType(string s) { type = s; }
 };
-class Circle: public Object {
+class Circle : public Object {
 	double radius;
 public:
 	Circle() {
@@ -102,7 +102,7 @@ public:
 			a += 360;
 			angle = (a % 360);
 		}
-		else angle = a; 
+		else angle = a;
 	}
 };
 class Drawing {
@@ -112,12 +112,17 @@ public:
 	void insertObject(Object* object) {
 		objects.push_back(object);
 	}
-	~Drawing() {};
+	void deleteList() { objects.clear(); }
+	~Drawing() { this->deleteList(); };
 };
 class Painter {
 	Drawing drawing;
 public:
-	virtual ~Painter() {};
+	virtual ~Painter() {
+		for (Object* i : drawing.getList()) {
+			delete i;
+		}
+	}
 	virtual Object* createObject()const = 0;
 	void draw() {
 		Object* object = createObject();
@@ -135,25 +140,25 @@ public:
 };
 class CirclePainter : public Painter {
 public:
-	Object* createObject() const override{ return new Circle(4); }
+	Object* createObject() const override { return new Circle(); }
 	~CirclePainter() {};
 };
 class SquarePainter : public Painter {
 public:
-	Square* createObject() const override { return new Square(3); }
+	Square* createObject() const override { return new Square(); }
 	~SquarePainter() {};
 };
 class StraightLinePainter : public Painter {
 public:
-	StraightLine* createObject() const override { return new StraightLine(2); }
+	StraightLine* createObject() const override { return new StraightLine(); }
 	~StraightLinePainter() {};
 };
 class CurvedLinePainter : public Painter {
 public:
-	CurvedLine* createObject() const override { return new CurvedLine(1,3); }
+	CurvedLine* createObject() const override { return new CurvedLine(); }
 	~CurvedLinePainter() {};
 };
-int main(){
+int main() {
 	Painter* painter = new CirclePainter();
 	painter->draw();
 	painter->drawObject(new Circle(3));
