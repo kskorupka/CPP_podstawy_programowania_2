@@ -160,7 +160,7 @@ public:
 };
 int main() {
 	Painter* painter = new CirclePainter();
-	painter->draw();
+	+painter->draw();
 	painter->drawObject(new Circle(3));
 	painter->printMyWork();
 	delete painter;
