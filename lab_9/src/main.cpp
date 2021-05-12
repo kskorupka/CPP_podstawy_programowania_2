@@ -147,6 +147,7 @@ int main()
     // throw when ptr is null or x == 0
     // provide and extra info about the exception (message, line, function name,
     // info) e.g throw myexception("msg", __FILE__, catch exceptions
+    //done
     int a = 10, x = 0, d = 5, result;
     int* c = &a, *e = 0;
     try {
