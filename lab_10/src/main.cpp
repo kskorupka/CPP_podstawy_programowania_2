@@ -113,7 +113,7 @@ public:
         Bucket* ptr = this->get_head();
         int i = 0;
         while (ptr->elements[i] != it.bucket->elements[it.cursor]) {
-            if(i<N-1) i++;
+            if (i < N - 1) i++;
             else {
                 ptr = ptr->next;
                 i = 0;
@@ -121,18 +121,18 @@ public:
         }
         Bucket* pom = ptr;
         int j = i;
+        std::string tmp;
         while (ptr->elements[i] != end.bucket->elements[end.cursor]) {
             if (j < N - 1) j++; 
             else {
                 pom = pom->next;
                 j = 0;
             }
-            std::string tmp = pom->elements[j];
+            tmp = pom->elements[j];
             ptr->elements[i] = tmp;
-            if (i < N - 1)i++;
+            if (i < N - 1) i++;
             else {
                 ptr = ptr->next;
-                (*this).change_tail(ptr);
                 i = 0;
             }
         }
@@ -156,8 +156,47 @@ public:
             end->CurrentSize--;
         }
     }
-    void erase(VectoredListIterator& it1, VectoredListIterator& it2);
-    
+    void erase(VectoredListIterator& it1, VectoredListIterator& it2) {
+        VectoredListIterator end = this->end();
+        Bucket* ptr = this->get_head();
+        int i = 0;
+        while (ptr->elements[i] != it1.bucket->elements[it1.cursor]) {
+            if (i < N - 1) i++;
+            else {
+                ptr = ptr->next;
+                i = 0;
+            }
+        }
+        Bucket* pom = ptr;
+        int j = i;
+        while (pom->elements[j] != it2.bucket->elements[it2.cursor]) {
+            if (j < N - 1) j++;
+            else {
+                pom = pom->next;
+                j = 0;
+            }
+        }
+        std::string tmp;
+        while (pom->elements[j] != end.bucket->elements[end.cursor]) {
+            if (j < N - 1) j++;
+            else {
+                pom = pom->next;
+                j = 0;
+            }
+            tmp = pom->elements[j];
+            ptr->elements[i] = tmp;
+            if (i < N - 1) i++;
+            else {
+                ptr = ptr->next;
+                i = 0;
+            }
+        }
+        do {
+            (*this).pop_back();
+            end = this->end();
+        } while (end.bucket->elements[end.cursor] != ptr->elements[i]);
+        (*this).pop_back();
+    }
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
     return (it1.bucket->elements[it1.cursor] != it2.bucket->elements[it2.bucket->CurrentSize]);
@@ -220,7 +259,17 @@ int main()
             cout << endl;
     }*/
 
-    // v.erase(it33, it45);
+    v.erase(it33, it45);
+
+    /*
+    for (VectoredList::VectoredListIterator ita(v, 0); ita.good(); ++ita)
+    {
+        cout << ita.get() << " ";
+        if (ita.cursor % 10 == 9)
+            cout << endl;
+    }*/
+
+
     // for (int i = 0; i < v.VectoredListSize(); ++i)
     // {
     //     cout << v[i] << " ";
