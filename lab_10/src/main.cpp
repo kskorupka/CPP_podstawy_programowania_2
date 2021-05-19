@@ -197,6 +197,22 @@ public:
         } while (end.bucket->elements[end.cursor] != ptr->elements[i]);
         (*this).pop_back();
     }
+    int VectoredListSize() {
+        int i = 0;
+        VectoredListIterator start = this->begin();
+        VectoredListIterator end = this->end();
+        do{
+            ++i;
+            ++start;
+        } while (start.bucket->elements[start.cursor] != end.bucket->elements[end.cursor]);
+        return ++i;
+    }
+    std::string operator[](int n) {
+        VectoredListIterator start = this->begin();
+        int i = 0;
+        while (i < n) { ++start; ++i;}
+        return start.bucket->elements[start.cursor];
+    }
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
     return (it1.bucket->elements[it1.cursor] != it2.bucket->elements[it2.bucket->CurrentSize]);
@@ -267,15 +283,15 @@ int main()
         cout << ita.get() << " ";
         if (ita.cursor % 10 == 9)
             cout << endl;
-    }*/
+    }
+    cout << endl;*/
 
-
-    // for (int i = 0; i < v.VectoredListSize(); ++i)
-    // {
-    //     cout << v[i] << " ";
-    //     if (i % 10 == 0)
-    //         cout << endl;
-    // }
+     for (int i = 0; i < v.VectoredListSize(); ++i)
+     {
+         cout << v[i] << " ";
+         if (i % 10 == 0)
+             cout << endl;
+     }
 
     cout << endl << "---------- 5 ----------" << endl;
     // VectoredList v2 = v;
