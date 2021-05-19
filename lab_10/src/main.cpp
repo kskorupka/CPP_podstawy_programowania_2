@@ -67,15 +67,6 @@ public:
     int get_size() { return size; }
     int get_capacity() { return capacity; }
 };
-/*
-VectoredList::Bucket::Bucket() {
-    Bucket* ptr = head;
-    while (ptr) {
-        ptr = ptr->next;
-    }
-    prev = ptr;
-    next = 0;
-}*/
 int main()
 {
     cout << endl << "---------- 1,2 ----------" << endl;
