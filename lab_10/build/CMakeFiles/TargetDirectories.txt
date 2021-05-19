@@ -1,0 +1,7 @@
+/home/student/podstawy_programowania_2/lab_10/build/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_10/build/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_10/build/src/CMakeFiles/rebuild_cache.dir
+/home/student/podstawy_programowania_2/lab_10/build/src/CMakeFiles/edit_cache.dir
+/home/student/podstawy_programowania_2/lab_10/build/src/CMakeFiles/valgrind_lab_10.dir
+/home/student/podstawy_programowania_2/lab_10/build/src/CMakeFiles/run_lab_10.dir
+/home/student/podstawy_programowania_2/lab_10/build/src/CMakeFiles/lab_10.dir
