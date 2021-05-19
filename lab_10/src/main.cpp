@@ -94,6 +94,9 @@ public:
             bucket->CurrentSize++;
         }
     }
+    void change_tail(Bucket* bucket) {
+        tail = bucket;
+    }
     Bucket* get_head()const{ return head; }
     Bucket* get_tail()const{ return tail; }
     int get_size()const{ return size; }
@@ -105,6 +108,56 @@ public:
         i.cursor = this->get_tail()->CurrentSize - 1;
         return i;
     }
+    void erase(VectoredListIterator& it) {
+        VectoredListIterator end = this->end();
+        Bucket* ptr = this->get_head();
+        int i = 0;
+        while (ptr->elements[i] != it.bucket->elements[it.cursor]) {
+            if(i<N-1) i++;
+            else {
+                ptr = ptr->next;
+                i = 0;
+            }
+        }
+        Bucket* pom = ptr;
+        int j = i;
+        while (ptr->elements[i] != end.bucket->elements[end.cursor]) {
+            if (j < N - 1) j++; 
+            else {
+                pom = pom->next;
+                j = 0;
+            }
+            std::string tmp = pom->elements[j];
+            ptr->elements[i] = tmp;
+            if (i < N - 1)i++;
+            else {
+                ptr = ptr->next;
+                (*this).change_tail(ptr);
+                i = 0;
+            }
+        }
+        ptr->elements[i] = " ";
+        if (ptr->CurrentSize == 1) {
+            ptr->prev->next = 0;
+            change_tail(ptr->prev);
+            delete ptr;
+        }
+        else ptr->CurrentSize--;
+    }
+    void pop_back() {
+        Bucket* end = this->get_tail();
+        if (end->CurrentSize == 1) {
+            change_tail(end->prev);
+            end->prev->next = 0;
+            delete end;
+        }
+        else {
+            end->elements[end->CurrentSize - 1] = " ";
+            end->CurrentSize--;
+        }
+    }
+    void erase(VectoredListIterator& it1, VectoredListIterator& it2);
+    
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
     return (it1.bucket->elements[it1.cursor] != it2.bucket->elements[it2.bucket->CurrentSize]);
@@ -117,14 +170,6 @@ int main()
          v.push_back("s" + to_string(i));
 
      //done
-     //VectoredList::Bucket* start = v.get_head();
-    
-     /*
-     while (start) {
-         for (int i = 0; i < v.get_capacity(); i++) std::cout << start->elements[i] << " ";
-         std::cout << std::endl;
-         start = start->next;
-     }*/
 
      for (VectoredList::VectoredListIterator ita(v, 101); ita.good(); --ita)
      {
@@ -139,14 +184,42 @@ int main()
      for (const auto &element : v)
          cout << element << "AAA" << endl;
          
+     //done
     cout << endl << "---------- 4 ----------" << endl;
-    // VectoredList::VectoredListIterator it3(v, 3);
-    // VectoredList::VectoredListIterator it33(v, 33);
-    // VectoredList::VectoredListIterator it45(v, 45);
+     VectoredList::VectoredListIterator it3(v, 3);
+     VectoredList::VectoredListIterator it33(v, 33);
+     VectoredList::VectoredListIterator it45(v, 45);
 
-    // v.erase(it3);
-    // v.pop_back();
-    // v.pop_back();
+     /*
+     for (VectoredList::VectoredListIterator ita(v, 0); ita.good(); ++ita)
+     {
+         cout << ita.get() << " ";
+         if (ita.cursor % 10 == 9)
+             cout << endl;
+     }
+     cout << endl << endl;*/
+
+     v.erase(it3);
+
+     /*
+     for (VectoredList::VectoredListIterator ita(v,0); ita.good(); ++ita)
+     {
+         cout << ita.get() << " ";
+         if (ita.cursor % 10 == 9)
+             cout << endl;
+     }*/
+
+    v.pop_back();
+    v.pop_back();
+
+    /*
+    for (VectoredList::VectoredListIterator ita(v, 0); ita.good(); ++ita)
+    {
+        cout << ita.get() << " ";
+        if (ita.cursor % 10 == 9)
+            cout << endl;
+    }*/
+
     // v.erase(it33, it45);
     // for (int i = 0; i < v.VectoredListSize(); ++i)
     // {
