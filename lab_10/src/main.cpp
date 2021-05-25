@@ -234,6 +234,7 @@ int main() {
              cout << endl;
      }
      cout << endl << "---------- 5 ----------" << endl;
+     //VectoredList v2=v; //this doesn't work, but the next one works
      VectoredList v2;
      v2 = v;
       for (int i = 0; i < v2.VectoredListSize(); ++i)
