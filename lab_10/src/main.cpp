@@ -13,7 +13,9 @@ public:
         Bucket* next;
         std::array <std::string, N> elements;
         int CurrentSize;
-        Bucket() :CurrentSize(0){};
+        Bucket() :CurrentSize(0) {
+            for (int i = 0; i < N; i++) elements[i] = "";
+        }
         ~Bucket() {};
     };
     class VectoredListIterator {
@@ -21,9 +23,9 @@ public:
         Bucket* bucket;
         int cursor;
         VectoredListIterator() :bucket(0), cursor(0) {}
-        VectoredListIterator(VectoredList& vectoredlist, double n) :bucket(vectoredlist.get_head()), cursor(0) {
+        VectoredListIterator(const VectoredList& vectoredlist, double n) :bucket(vectoredlist.get_head()), cursor(0) {
             int i = 0;
-            while (i < (n - 1) && bucket) {
+            while (i < n && bucket) {
                 i++;
                 cursor++;
                 if (i % vectoredlist.get_capacity() == 0) {
@@ -101,7 +103,7 @@ public:
     void change_tail(Bucket* bucket) {
         tail = bucket;
     }
-    VectoredListIterator begin() { return VectoredListIterator(*this, 0); }
+    VectoredListIterator begin() const { return VectoredListIterator(*this, 0); }
     VectoredListIterator end() {
         VectoredListIterator i;
         if (this->get_tail()->CurrentSize == N) {
@@ -146,6 +148,11 @@ public:
     }
     void erase(VectoredListIterator it);
     void erase(VectoredListIterator it1, VectoredListIterator it2);
+    VectoredList& operator=(const VectoredList& v);
+    std::string operator[](int i) {
+        VectoredListIterator it(*this, i);
+        return it.bucket->elements[it.cursor];
+    }
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
     return (it1.bucket->elements[it1.cursor] != it2.bucket->elements[it2.cursor]);
@@ -182,33 +189,57 @@ void VectoredList::erase(VectoredList::VectoredListIterator it1, VectoredList::V
         end = this->end();
     } while (ptr != end);
 }
+VectoredList& VectoredList:: operator=(const VectoredList& v) {
+    if (&v == this) return *this;
+    VectoredList::VectoredListIterator it = v.begin();
+    VectoredList::VectoredListIterator end;
+    end.bucket = v.get_tail();
+    end.cursor = v.get_tail()->CurrentSize;
+    while (it != end) {
+        this->push_back(it.bucket->elements[it.cursor]);
+        ++it;
+    }
+    return *this;
+}
 int main() {
     cout << endl << "---------- 1,2 ----------" << endl;
-    VectoredList v;
-    for (int i = 0; i < 101; ++i)
-        v.push_back("s" + to_string(i));
+     VectoredList v;
+     for (int i = 0; i < 101; ++i)
+         v.push_back("s" + to_string(i));
 
-    for (VectoredList::VectoredListIterator ita(v, 101); ita.good(); --ita)
-    {
-        cout << ita.get() << " ";
-        if (ita.cursor % 10 == 0)
-            cout << endl;
-    }
+     for (VectoredList::VectoredListIterator ita(v, 101); ita.good(); --ita)
+     {
+         cout << ita.get() << " ";
+         if (ita.cursor % 10 == 0)
+             cout << endl;
+     }
+
     cout << endl << "---------- 3 ----------" << endl;;
-    for (const auto& element : v)
-        cout << element << "AAA" << endl;
+     for (const auto &element : v)
+         cout << element << "AAA" << endl;
+
     cout << endl << "---------- 4 ----------" << endl;
-    VectoredList::VectoredListIterator it3(v, 3);
-    VectoredList::VectoredListIterator it33(v, 33);
-    VectoredList::VectoredListIterator it45(v, 45);
-    v.erase(it3);
-    v.pop_back();
-    v.pop_back();
-    v.erase(it33,it45);
-    for (VectoredList::VectoredListIterator ita(v, 0); ita.good(); ++ita)
-    {
-        cout << ita.get() << " ";
-        if (ita.cursor % 10 == 0)
-            cout << endl;
-    }
+     VectoredList::VectoredListIterator it3(v, 3);
+     VectoredList::VectoredListIterator it33(v, 33);
+     VectoredList::VectoredListIterator it45(v, 45);
+
+     v.erase(it3);
+     v.pop_back();
+     v.pop_back();
+     v.erase(it33, it45);
+     for (int i = 0; i < v.VectoredListSize(); ++i)
+     {
+         cout << v[i] << " ";
+         if (i % 10 == 0)
+             cout << endl;
+     }
+     cout << endl << "---------- 5 ----------" << endl;
+     VectoredList v2;
+     v2 = v;
+      for (int i = 0; i < v2.VectoredListSize(); ++i)
+      {
+          cout << v2[i] << " ";
+          if (i % 10 == 0)
+              cout << endl;
+      }
 }
