@@ -77,6 +77,22 @@ public:
             delete(tmp2);
         }
     }
+    VectoredList(const VectoredList& v) { //deep_copy
+        Bucket* bucket = new Bucket();
+        head = bucket;
+        tail = bucket;
+        bucket->prev = 0;
+        bucket->next = 0;
+        size = 1;
+        VectoredList::VectoredListIterator it = v.begin();
+        VectoredList::VectoredListIterator end;
+        end.bucket = v.get_tail();
+        end.cursor = v.get_tail()->CurrentSize;
+        while (it.bucket->elements[it.cursor] != end.bucket->elements[end.cursor]) {
+            this->push_back(it.bucket->elements[it.cursor]);
+            ++it;
+        }
+    }
     void push_back(std::string s) {
         Bucket* ptr = this->head;
         while (ptr->next) { ptr = ptr->next; }
@@ -94,6 +110,7 @@ public:
             this->tail = bucket;
             bucket->elements[0] = s;
             bucket->CurrentSize++;
+            size++;
         }
     }
     Bucket* get_head()const { return head; }
@@ -234,13 +251,24 @@ int main() {
              cout << endl;
      }
      cout << endl << "---------- 5 ----------" << endl;
-     //VectoredList v2=v; //this doesn't work, but the next one works
-     VectoredList v2;
-     v2 = v;
+     VectoredList v2 = v; //deep_copy
       for (int i = 0; i < v2.VectoredListSize(); ++i)
       {
           cout << v2[i] << " ";
           if (i % 10 == 0)
               cout << endl;
       }
+
+      // i've created operator=() overload too, but in this case we're using deep_copy constructor
+      //this also works:
+      /*
+      VectoredList v3;
+      v3 = v;
+      cout<<endl<<endl;
+      for (int i = 0; i < v3.VectoredListSize(); ++i)
+      {
+          cout << v3[i] << " ";
+          if (i % 10 == 0)
+              cout << endl;
+      }*/
 }
