@@ -1,6 +1,7 @@
 #include <array>
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 static const int N = 10;
 class VectoredList {
@@ -99,8 +100,9 @@ public:
         size = v.get_size();
         v.change_tail(0);
         v.change_head(0);
-        cout << "Ctor move (head):" << this->get_head() << endl;
-        cout << "Ctor move (tail):" << this->get_tail() << endl;
+        v.change_size(0);
+        cout << "(constructor) Ctor move (head):" << this->get_head() << endl;
+        cout << "(constructor) Ctor move (tail):" << this->get_tail() << endl;
     }
     void push_back(std::string s) {
         Bucket* ptr = this->head;
@@ -131,6 +133,9 @@ public:
     void change_head(Bucket* bucket) {
         head = bucket;
     }
+    void change_size(int n) {
+        size = n;
+    }
     VectoredListIterator begin() const { return VectoredListIterator(*this, 0); }
     VectoredListIterator end() {
         VectoredListIterator i;
@@ -158,6 +163,7 @@ public:
             end->prev->next = 0;
             change_tail(end->prev);
             delete end;
+            size--;
         }
         else {
             end->elements[end->CurrentSize - 1] = "";
@@ -166,6 +172,7 @@ public:
     }
     int VectoredListSize() {
         int i = 0;
+        if (this->get_size() == 0) return 0;
         VectoredListIterator start = this->begin();
         VectoredListIterator end = this->end();
         do {
@@ -180,6 +187,28 @@ public:
     std::string operator[](int i) {
         VectoredListIterator it(*this, i);
         return it.bucket->elements[it.cursor];
+    }
+    VectoredList& operator=(VectoredList&& v) {
+        head = v.get_head();
+        tail = v.get_tail();
+        size = v.get_size();
+        cout << "(operator= [rvalue]) Ctor move (head):" << this->get_head() << endl;
+        cout << "(operator= [rvalue]) Ctor move (tail):" << this->get_tail() << endl;
+        v.change_head(0);
+        v.change_tail(0);
+        v.change_size(0);
+        return *this;
+    }
+    VectoredList operator+(const VectoredList& rhs);
+    void assign(vector<string>& v) { //move all elements from v to *this
+        for (int i = 0; i < v.size(); i++) this->push_back(v[i]);
+        v.erase(v.begin(), v.end());
+        v.shrink_to_fit();
+    }
+    void clear() {
+        VectoredListIterator start = this->begin();
+        VectoredListIterator end = this->end();
+        (*this).erase(start, end);
     }
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
@@ -219,6 +248,7 @@ void VectoredList::erase(VectoredList::VectoredListIterator it1, VectoredList::V
 }
 VectoredList& VectoredList:: operator=(const VectoredList& v) {
     if (&v == this) return *this;
+    (*this).clear();
     VectoredList::VectoredListIterator it = v.begin();
     VectoredList::VectoredListIterator end;
     end.bucket = v.get_tail();
@@ -227,56 +257,65 @@ VectoredList& VectoredList:: operator=(const VectoredList& v) {
         this->push_back(it.bucket->elements[it.cursor]);
         ++it;
     }
+    cout << "(operator= [lvalue]) Ctor move (head):" << this->get_head() << endl;
+    cout << "(operator= [lvalue]) Ctor move (tail):" << this->get_tail() << endl;
+    return *this;
+}
+VectoredList VectoredList:: operator+(const VectoredList& rhs) {
+    VectoredList::VectoredListIterator it = rhs.begin();
+    VectoredList::VectoredListIterator end;
+    end.bucket = rhs.get_tail();
+    end.cursor = rhs.get_tail()->CurrentSize;
+    while (it != end) {
+        this->push_back(it.bucket->elements[it.cursor]);
+        ++it;
+    }
     return *this;
 }
 int main() {
     cout << endl << "---------- 1 ----------" << endl;
-     VectoredList v;
-     string       t11("TEST 1.1");
-     string       t12("TEST 1.2");
-     v.push_back(t11);
-     v.push_back(t12);
+    VectoredList v;
+    string       t11("TEST 1.1");
+    string       t12("TEST 1.2");
+    v.push_back(t11);
+    v.push_back(t12);
 
-     //KONSTRUKTOR PRZENOSZĄCY
-     VectoredList v1(move(v));
+    //KONSTRUKTOR PRZENOSZĄCY
+    VectoredList v1(move(v));
 
-     for (int i = 0; i < v1.VectoredListSize(); ++i)
-     {
-         cout << v1[i] << endl;
-     }
+    for (int i = 0; i < v1.VectoredListSize(); ++i)
+    {
+        cout << v1[i] << endl;
+    }
     cout << endl << "---------- 2 ----------" << endl;
-    // VectoredList v2;
-    // string       t21("TEST 2.1");
-    // string       t22("TEST 2.2");
-    // v2.push_back(t21);
-    // v2.push_back(t22);
+    VectoredList v2;
+    string       t21("TEST 2.1");
+    string       t22("TEST 2.2");
+    v2.push_back(t21);
+    v2.push_back(t22);
+    //v1 = move(v2);
 
-    // v1 = move(v2);
-
-    // for (int i = 0; i < v1.VectoredListSize(); ++i)
-    // {
-    //     cout << v1[i] << endl;
-    // }
+    for (int i = 0; i < v1.VectoredListSize(); ++i)
+    {
+        cout << v1[i] << endl;
+    }
 
     cout << endl << "---------- 3 ----------" << endl;
-    // VectoredList v3, v4;
-    // string       t31("TEST 3.1");
-    // v3.push_back(t31);
-
-    // v4 = v1 + v3;
-
-    // for (int i = 0; i < v4.VectoredListSize(); ++i)
-    // {
-    //     cout << v4[i] << endl;
-    // }
-
+    VectoredList v3, v4;
+    string       t31("TEST 3.1");
+    v3.push_back(t31);
+    //v4 = v1 + v3;
+    for (int i = 0; i < v4.VectoredListSize(); ++i)
+    {
+        cout << v4[i] << endl;
+    }
     cout << endl << "---------- 4 ----------" << endl;
-    // vector<string> V{"TEST 4.1", "TEST 4.2"};
+    vector<string> V{"TEST 4.1", "TEST 4.2"};
 
-    // v4.assign(V);
+    v4.assign(V);
 
-    // for (int i = 0; i < v4.VectoredListSize(); ++i)
-    // {
-    //     cout << v4[i] << endl;
-    // }
+    for (int i = 0; i < v4.VectoredListSize(); ++i)
+    {
+        cout << v4[i] << endl;
+    }
 }
