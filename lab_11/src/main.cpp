@@ -89,9 +89,9 @@ public:
             tmp2 = tmp;
             tmp = tmp->next;
             delete(tmp2);
+            --size;
         }
         delete(tmp);
-        //cout << "VectoredList object deleted\n";
     }
     Bucket* get_head()const { return head; }
     Bucket* get_tail()const { return tail; }
@@ -138,6 +138,7 @@ public:
         VectoredListIterator i;
         if (get_tail()->CurrentSize == N) {
             Bucket* bucket = new Bucket();
+            size++;
             get_tail()->next = bucket;
             bucket->next = 0;
             bucket->prev = get_tail();
@@ -203,6 +204,7 @@ public:
             tmp = bucket;
             bucket = bucket->next;
             delete(tmp);
+            --size;
         }
         delete(bucket);
         head = v.get_head();
