@@ -6,7 +6,7 @@ using namespace std;
 static const int N = 10;
 class VectoredList {
     int size;
-    int capacity = N;
+    int capacity;
 public:
     class Bucket {
     public:
@@ -14,7 +14,7 @@ public:
         Bucket* next;
         std::array <std::string, N> elements;
         int CurrentSize;
-        Bucket() :CurrentSize(0) {
+        Bucket() :CurrentSize(0), prev(0), next(0) {
             for (int i = 0; i < N; i++) elements[i] = "";
         }
         ~Bucket() {};
@@ -61,30 +61,8 @@ private:
     Bucket* head;
     Bucket* tail;
 public:
-    VectoredList() {
-        Bucket* bucket = new Bucket();
-        head = bucket;
-        tail = bucket;
-        bucket->prev = 0;
-        bucket->next = 0;
-        size = 1;
-    }
-    ~VectoredList() {
-        Bucket* tmp = head;
-        Bucket* tmp2;
-        while (tmp) {
-            tmp2 = tmp;
-            tmp = tmp->next;
-            delete(tmp2);
-        }
-    }
-    VectoredList(const VectoredList& v) {
-        Bucket* bucket = new Bucket();
-        head = bucket;
-        tail = bucket;
-        bucket->prev = 0;
-        bucket->next = 0;
-        size = 1;
+    VectoredList() : size(0), capacity(N), head(0), tail(0) {};
+    VectoredList(const VectoredList& v) :head(0), tail(0), size(0), capacity(N) {
         VectoredList::VectoredListIterator it = v.begin();
         VectoredList::VectoredListIterator end;
         end.bucket = v.get_tail();
@@ -94,7 +72,7 @@ public:
             ++it;
         }
     }
-    VectoredList(VectoredList&& v) {
+    VectoredList(VectoredList&& v) :head(0), tail(0), size(0), capacity(N) {
         head = v.get_head();
         tail = v.get_tail();
         size = v.get_size();
@@ -104,24 +82,16 @@ public:
         cout << "(constructor) Ctor move (head):" << this->get_head() << endl;
         cout << "(constructor) Ctor move (tail):" << this->get_tail() << endl;
     }
-    void push_back(std::string s) {
-        Bucket* ptr = this->head;
-        while (ptr->next) { ptr = ptr->next; }
-        if (ptr->CurrentSize < this->capacity) {
-            ptr->elements[ptr->CurrentSize] = s;
-            ptr->CurrentSize++;
+    ~VectoredList() {
+        Bucket* tmp = head;
+        Bucket* tmp2;
+        while (tmp) {
+            tmp2 = tmp;
+            tmp = tmp->next;
+            delete(tmp2);
         }
-        else {
-            Bucket* bucket = new Bucket();
-            Bucket* ptr = this->head;
-            while (ptr->next) { ptr = ptr->next; }
-            bucket->prev = ptr;
-            bucket->next = 0;
-            ptr->next = bucket;
-            this->tail = bucket;
-            bucket->elements[0] = s;
-            bucket->CurrentSize++;
-        }
+        delete(tmp);
+        //cout << "VectoredList object deleted\n";
     }
     Bucket* get_head()const { return head; }
     Bucket* get_tail()const { return tail; }
@@ -136,18 +106,45 @@ public:
     void change_size(int n) {
         size = n;
     }
+    void push_back(std::string s) {
+        if (size == 0) {
+            Bucket* bucket = new Bucket();
+            change_head(bucket);
+            change_tail(bucket);
+            get_head()->prev = 0;
+            get_head()->next = 0;
+            get_tail()->prev = 0;
+            get_tail()->next = 0;
+            size++;
+        }
+        Bucket* bucket = get_tail();
+        if (bucket->CurrentSize < capacity) {
+            bucket->elements[bucket->CurrentSize] = s;
+            bucket->CurrentSize++;
+        }
+        else {
+            Bucket* next= new Bucket();
+            size++;
+            bucket->next = next;
+            next->prev = bucket;
+            next->next = 0;
+            change_tail(next);
+            next->elements[0] = s;
+            next->CurrentSize++;
+        }
+    }
     VectoredListIterator begin() const { return VectoredListIterator(*this, 0); }
     VectoredListIterator end() {
         VectoredListIterator i;
-        if (this->get_tail()->CurrentSize == N) {
+        if (get_tail()->CurrentSize == N) {
             Bucket* bucket = new Bucket();
-            this->get_tail()->next = bucket;
+            get_tail()->next = bucket;
             bucket->next = 0;
-            bucket->prev = this->get_tail();
-            this->change_tail(bucket);
+            bucket->prev = get_tail();
+            change_tail(bucket);
         }
-        i.bucket = this->get_tail();
-        i.cursor = this->get_tail()->CurrentSize;
+        i.bucket = get_tail();
+        i.cursor = get_tail()->CurrentSize;
         return i;
     }
     VectoredListIterator last_element() {
@@ -156,7 +153,7 @@ public:
         return end;
     }
     void pop_back() {
-        Bucket* end = this->get_tail();
+        Bucket* end = get_tail();
         if (end->CurrentSize == 0) {
             end->prev->elements[end->prev->CurrentSize - 1] = "";
             end->prev->CurrentSize--;
@@ -172,7 +169,7 @@ public:
     }
     int VectoredListSize() {
         int i = 0;
-        if (this->get_size() == 0) return 0;
+        if (get_size() == 0) return 0;
         VectoredListIterator start = this->begin();
         VectoredListIterator end = this->end();
         do {
@@ -188,17 +185,6 @@ public:
         VectoredListIterator it(*this, i);
         return it.bucket->elements[it.cursor];
     }
-    VectoredList& operator=(VectoredList&& v) {
-        head = v.get_head();
-        tail = v.get_tail();
-        size = v.get_size();
-        cout << "(operator= [rvalue]) Ctor move (head):" << this->get_head() << endl;
-        cout << "(operator= [rvalue]) Ctor move (tail):" << this->get_tail() << endl;
-        v.change_head(0);
-        v.change_tail(0);
-        v.change_size(0);
-        return *this;
-    }
     VectoredList operator+(const VectoredList& rhs);
     void assign(vector<string>& v) { //move all elements from v to *this
         for (int i = 0; i < v.size(); i++) this->push_back(v[i]);
@@ -209,6 +195,25 @@ public:
         VectoredListIterator start = this->begin();
         VectoredListIterator end = this->end();
         (*this).erase(start, end);
+    }
+    VectoredList& operator=(VectoredList&& v) {
+        Bucket* bucket = head;
+        Bucket* tmp;
+        while (bucket) {
+            tmp = bucket;
+            bucket = bucket->next;
+            delete(tmp);
+        }
+        delete(bucket);
+        head = v.get_head();
+        tail = v.get_tail();
+        size = v.get_size();
+        v.change_head(0);
+        v.change_tail(0);
+        v.change_size(0);
+        cout << "(operator= [rvalue]) Ctor move (head):" << this->get_head() << endl;
+        cout << "(operator= [rvalue]) Ctor move (tail):" << this->get_tail() << endl;
+        return *this;
     }
 };
 bool operator!=(VectoredList::VectoredListIterator& it1, VectoredList::VectoredListIterator& it2) {
@@ -274,48 +279,52 @@ VectoredList VectoredList:: operator+(const VectoredList& rhs) {
 }
 int main() {
     cout << endl << "---------- 1 ----------" << endl;
-    VectoredList v;
-    string       t11("TEST 1.1");
-    string       t12("TEST 1.2");
-    v.push_back(t11);
-    v.push_back(t12);
+     VectoredList v;
+     string       t11("TEST 1.1");
+     string       t12("TEST 1.2");
+     v.push_back(t11);
+     v.push_back(t12);
 
-    //KONSTRUKTOR PRZENOSZĄCY
-    VectoredList v1(move(v));
+     VectoredList v1(move(v));
 
-    for (int i = 0; i < v1.VectoredListSize(); ++i)
-    {
-        cout << v1[i] << endl;
-    }
+     for (int i = 0; i < v1.VectoredListSize(); ++i)
+     {
+         cout << v1[i] << endl;
+     }
+
     cout << endl << "---------- 2 ----------" << endl;
-    VectoredList v2;
-    string       t21("TEST 2.1");
-    string       t22("TEST 2.2");
-    v2.push_back(t21);
-    v2.push_back(t22);
-    //v1 = move(v2);
+     VectoredList v2;
+     string       t21("TEST 2.1");
+     string       t22("TEST 2.2");
+     v2.push_back(t21);
+     v2.push_back(t22);
 
-    for (int i = 0; i < v1.VectoredListSize(); ++i)
-    {
-        cout << v1[i] << endl;
-    }
+     v1 = move(v2);
+
+     for (int i = 0; i < v1.VectoredListSize(); ++i)
+     {
+         cout << v1[i] << endl;
+     }
 
     cout << endl << "---------- 3 ----------" << endl;
-    VectoredList v3, v4;
-    string       t31("TEST 3.1");
-    v3.push_back(t31);
-    //v4 = v1 + v3;
-    for (int i = 0; i < v4.VectoredListSize(); ++i)
-    {
-        cout << v4[i] << endl;
-    }
+     VectoredList v3, v4;
+     string       t31("TEST 3.1");
+     v3.push_back(t31);
+
+     v4 = v1 + v3;
+
+     for (int i = 0; i < v4.VectoredListSize(); ++i)
+     {
+         cout << v4[i] << endl;
+     }
+
     cout << endl << "---------- 4 ----------" << endl;
-    vector<string> V{"TEST 4.1", "TEST 4.2"};
+     vector<string> V{"TEST 4.1", "TEST 4.2"};
 
-    v4.assign(V);
+     v4.assign(V);
 
-    for (int i = 0; i < v4.VectoredListSize(); ++i)
-    {
-        cout << v4[i] << endl;
-    }
+     for (int i = 0; i < v4.VectoredListSize(); ++i)
+     {
+         cout << v4[i] << endl;
+     }
 }
