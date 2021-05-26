@@ -79,6 +79,7 @@ private:
             tmp2 = tmp;
             tmp = tmp->next;
             delete(tmp2);
+            size--;
         }
         delete(tmp);
     }
@@ -131,6 +132,7 @@ private:
             bucket->next = 0;
             bucket->prev = get_tail();
             change_tail(bucket);
+            size++;
         }
         i.bucket = get_tail();
         i.cursor = get_tail()->CurrentSize;
@@ -218,6 +220,7 @@ VectoredList& VectoredList:: operator=(const VectoredList& v) {
         tmp = bucket;
         bucket = bucket->next;
         delete(tmp);
+        size--;
     }
     delete(bucket);
     VectoredList::VectoredListIterator it = v.begin();
